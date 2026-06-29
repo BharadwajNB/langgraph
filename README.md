@@ -1,86 +1,67 @@
-<div align="center">
-
-# 🦜🔗 LangGraph — Agentic AI from Scratch
+# LangGraph — Agentic AI from Scratch
 
 ### A Hands-On Learning Repository for Building Stateful, Multi-Step AI Agents
 
-[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![LangGraph](https://img.shields.io/badge/LangGraph-1.2+-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)](https://langchain-ai.github.io/langgraph/)
-[![LangChain](https://img.shields.io/badge/LangChain-1.3+-1C3C3C?style=for-the-badge&logo=langchain&logoColor=white)](https://www.langchain.com/)
-[![Groq](https://img.shields.io/badge/Groq-Llama_3.3_70B-F55036?style=for-the-badge&logo=groq&logoColor=white)](https://groq.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![LangGraph](https://img.shields.io/badge/LangGraph-1.2+-1C3C3C?style=flat-square&logo=langchain&logoColor=white)](https://langchain-ai.github.io/langgraph/)
+[![LangChain](https://img.shields.io/badge/LangChain-1.3+-1C3C3C?style=flat-square&logo=langchain&logoColor=white)](https://www.langchain.com/)
+[![Groq](https://img.shields.io/badge/Groq-Llama_3.3_70B-F55036?style=flat-square&logo=groq&logoColor=white)](https://groq.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square)](LICENSE)
 
-<br/>
+This repository is a structured, progressive introduction to LangGraph — LangChain's framework for orchestrating stateful, multi-step AI agents. Each section builds on the previous one, moving from a minimal chatbot to a fully agentic, memory-enabled, streaming-capable system, with runnable notebooks and inline explanations throughout.
 
-> **Learn by building.** This repository walks you through the core concepts of LangGraph — the agent orchestration framework by LangChain — through progressive, well-documented Jupyter notebooks. Each section builds on the last, taking you from a bare-bones chatbot to a fully agentic, memory-enabled, streaming-capable AI system.
-
-<br/>
-
-[Getting Started](#-getting-started) · [What You'll Learn](#-what-youll-learn) · [Project Structure](#-project-structure) · [Tech Stack](#%EF%B8%8F-tech-stack) · [Contributing](#-contributing)
-
-</div>
+[Getting Started](#getting-started) · [What You'll Learn](#what-youll-learn) · [Project Structure](#project-structure) · [Tech Stack](#tech-stack) · [Contributing](#contributing)
 
 ---
 
-## 📚 What You'll Learn
+## What You'll Learn
 
-This repository is structured as a **progressive tutorial**. Each section introduces a new LangGraph concept, complete with runnable code, inline explanations, and real output from the Groq-powered LLM.
+This repository follows a progressive tutorial format. Each section introduces a new LangGraph concept with runnable code, inline explanations, and real output from the Groq-powered LLM.
 
 | # | Topic | Key Concepts | Notebook |
 |:-:|-------|--------------|:--------:|
-| 1 | **Basic ChatBot** | `StateGraph`, `START`/`END` nodes, `add_messages` reducer, graph compilation | [📓](1-BasicChatBot/1-basicchatbot.ipynb) |
-| 2 | **ChatBot with Tools** | Tavily web search, custom Python tools, `bind_tools()`, `ToolNode`, `tools_condition` | [📓](1-BasicChatBot/1-basicchatbot.ipynb) |
-| 3 | **ReAct Agent** | Reason + Act loop, multi-tool orchestration in a single prompt, `create_react_agent` | [📓](1-BasicChatBot/1-basicchatbot.ipynb) |
-| 4 | **Memory & Persistence** | `MemorySaver` checkpointer, `thread_id` config, cross-turn conversation recall | [📓](1-BasicChatBot/1-basicchatbot.ipynb) |
-| 5 | **Streaming** | `stream()` with `updates`/`values` modes, `astream_events()` for async token-level streaming | [📓](1-BasicChatBot/1-basicchatbot.ipynb) |
+| 1 | Basic ChatBot | `StateGraph`, `START`/`END` nodes, `add_messages` reducer, graph compilation | [Link](1-BasicChatBot/1-basicchatbot.ipynb) |
+| 2 | ChatBot with Tools | Tavily web search, custom Python tools, `bind_tools()`, `ToolNode`, `tools_condition` | [Link](1-BasicChatBot/1-basicchatbot.ipynb) |
+| 3 | ReAct Agent | Reason + Act loop, multi-tool orchestration in a single prompt, `create_react_agent` | [Link](1-BasicChatBot/1-basicchatbot.ipynb) |
+| 4 | Memory & Persistence | `MemorySaver` checkpointer, `thread_id` config, cross-turn conversation recall | [Link](1-BasicChatBot/1-basicchatbot.ipynb) |
+| 5 | Streaming | `stream()` with `updates`/`values` modes, `astream_events()` for async token-level streaming | [Link](1-BasicChatBot/1-basicchatbot.ipynb) |
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
-The following diagram illustrates the progression of graph architectures built in this repository:
+The diagram below illustrates the progression of graph architectures built in this repository.
 
 ```
-┌──────────────────────────────────────────────────────────────────────┐
-│                                                                      │
-│   1. BASIC CHATBOT          2. TOOL-CALLING           3. ReAct AGENT │
-│                                                                      │
-│   ┌───────┐                 ┌───────┐                 ┌───────┐      │
-│   │ START │                 │ START │                 │ START │      │
-│   └───┬───┘                 └───┬───┘                 └───┬───┘      │
-│       │                         │                         │          │
-│       ▼                         ▼                         ▼          │
-│   ┌────────┐               ┌─────────┐               ┌─────────┐    │
-│   │Chatbot │               │ LLM +   │◄──────────┐   │ ReAct   │    │
-│   │  Node  │               │ Tools   │           │   │  Agent  │◄─┐ │
-│   └───┬────┘               └────┬────┘           │   └────┬────┘  │ │
-│       │                      ┌──┴──┐             │     ┌──┴──┐    │ │
-│       ▼                      │Route│             │     │Route│    │ │
-│   ┌───────┐                  └┬───┬┘             │     └┬───┬┘    │ │
-│   │  END  │                   │   │              │      │   │     │ │
-│   └───────┘              ┌────┘   └────┐    ┌────┘ ┌───┘   └───┐ │ │
-│                          ▼             ▼    │      ▼           ▼ │ │
-│                      ┌───────┐   ┌────────┐ │  ┌────────┐  ┌───────┐│
-│                      │  END  │   │  Tool  │─┘  │  Tool  │──│  END  ││
-│                      └───────┘   │  Node  │    │  Node  │  └───────┘│
-│                                  └────────┘    └────────┘           │
-│                                                                      │
-│   4. + MEMORY (MemorySaver)    5. + STREAMING (stream / astream)    │
-│      Adds persistence via         Token-by-token output with        │
-│      thread-based checkpoints     updates, values & events modes    │
-│                                                                      │
-└──────────────────────────────────────────────────────────────────────┘
+ 1. BASIC CHATBOT          2. TOOL-CALLING            3. ReAct AGENT
+ ───────────────           ───────────────             ───────────────
+
+   START                     START                       START
+     │                         │                           │
+     ▼                         ▼                           ▼
+  Chatbot                  LLM + Tools  <───────┐        ReAct Agent  <───┐
+   Node                        │                │             │          │
+     │                       Route               │           Route        │
+     ▼                      ┌──┴──┐              │          ┌──┴──┐       │
+    END                     ▼     ▼              │          ▼     ▼       │
+                           END   Tool Node ───────┘        Tool Node      │
+                                                              │   END      │
+                                                              └────────────┘
+
+ 4. + MEMORY (MemorySaver)              5. + STREAMING (stream / astream)
+    Adds persistence via                   Token-by-token output with
+    thread-based checkpoints               updates, values & events modes
 ```
 
 ---
 
-## ⚡ Getting Started
+## Getting Started
 
 ### Prerequisites
 
-- **Python 3.12+**
-- **[uv](https://docs.astral.sh/uv/)** (recommended) or `pip`
-- API keys for **[Groq](https://console.groq.com/)** and **[Tavily](https://tavily.com/)**
+- Python 3.12+
+- [uv](https://docs.astral.sh/uv/) (recommended) or `pip`
+- API keys for [Groq](https://console.groq.com/) and [Tavily](https://tavily.com/)
 
 ### 1. Clone the Repository
 
@@ -117,12 +98,12 @@ GROQ_API_KEY=your_groq_api_key_here
 TAVILY_API_KEY=your_tavily_api_key_here
 ```
 
-> **🔑 Where to get your keys:**
->
-> | Service | Sign Up | Free Tier |
-> |---------|---------|-----------|
-> | Groq | [console.groq.com](https://console.groq.com/) | ✅ Generous free tier |
-> | Tavily | [tavily.com](https://tavily.com/) | ✅ 1,000 free searches/month |
+**Where to get your keys:**
+
+| Service | Sign Up | Free Tier |
+|---------|---------|-----------|
+| Groq | [console.groq.com](https://console.groq.com/) | Generous free tier |
+| Tavily | [tavily.com](https://tavily.com/) | 1,000 free searches/month |
 
 ### 4. Launch the Notebooks
 
@@ -134,42 +115,42 @@ Navigate to `1-BasicChatBot/1-basicchatbot.ipynb` and run the cells sequentially
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 langgraph/
 ├── 1-BasicChatBot/
-│   └── 1-basicchatbot.ipynb   # 📓 Progressive tutorial notebook
-│                                #    ├── Basic ChatBot (Graph API)
-│                                #    ├── ChatBot with Tools (Tavily + Custom)
-│                                #    ├── ReAct Agent (Multi-tool reasoning)
-│                                #    ├── Memory & Persistence (MemorySaver)
-│                                #    └── Streaming (sync + async)
-├── main.py                     # Entry point scaffold
-├── pyproject.toml              # Project metadata & dependencies
-├── requirements.txt            # Pip-compatible dependency list
-├── .env                        # API keys (⚠️ do NOT commit)
-├── .gitignore                  # Ignores .env, __pycache__, .venv
-└── README.md                   # You are here
+│   └── 1-basicchatbot.ipynb   # Progressive tutorial notebook
+│                               #   - Basic ChatBot (Graph API)
+│                               #   - ChatBot with Tools (Tavily + Custom)
+│                               #   - ReAct Agent (Multi-tool reasoning)
+│                               #   - Memory & Persistence (MemorySaver)
+│                               #   - Streaming (sync + async)
+├── main.py                    # Entry point scaffold
+├── pyproject.toml             # Project metadata & dependencies
+├── requirements.txt           # Pip-compatible dependency list
+├── .env                       # API keys (do NOT commit)
+├── .gitignore                 # Ignores .env, __pycache__, .venv
+└── README.md                  # You are here
 ```
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology | Purpose |
 |-------|-----------|---------|
-| **Orchestration** | [LangGraph](https://langchain-ai.github.io/langgraph/) `>=1.2.6` | Graph-based agent workflows with state management |
-| **Framework** | [LangChain](https://www.langchain.com/) `>=1.3.11` | LLM abstraction, tool binding, prompt management |
-| **LLM Provider** | [Groq](https://groq.com/) — Llama 3.3 70B Versatile | Ultra-fast inference via LPU™ hardware |
-| **Web Search** | [Tavily](https://tavily.com/) | Real-time internet search optimized for AI agents |
-| **Observability** | [LangSmith](https://smith.langchain.com/) `>=0.9.0` | Tracing, debugging, and evaluation |
-| **Language** | Python 3.12+ | Type hints, `Annotated` types, async support |
-| **Package Manager** | [uv](https://docs.astral.sh/uv/) | Fast, reliable Python package management |
+| Orchestration | [LangGraph](https://langchain-ai.github.io/langgraph/) `>=1.2.6` | Graph-based agent workflows with state management |
+| Framework | [LangChain](https://www.langchain.com/) `>=1.3.11` | LLM abstraction, tool binding, prompt management |
+| LLM Provider | [Groq](https://groq.com/) — Llama 3.3 70B Versatile | Ultra-fast inference via LPU hardware |
+| Web Search | [Tavily](https://tavily.com/) | Real-time internet search optimized for AI agents |
+| Observability | [LangSmith](https://smith.langchain.com/) `>=0.9.0` | Tracing, debugging, and evaluation |
+| Language | Python 3.12+ | Type hints, `Annotated` types, async support |
+| Package Manager | [uv](https://docs.astral.sh/uv/) | Fast, reliable Python package management |
 
 ---
 
-## 🧠 Core Concepts Covered
+## Core Concepts Covered
 
 ### 1. State Management with `TypedDict` + Reducers
 
@@ -209,11 +190,11 @@ llm_with_tools = llm.bind_tools([tool, multiply])
 
 ### 4. ReAct Agent Pattern
 
-The **Reason + Act** loop enables the agent to:
-- 🤔 **Reason** about which tool to call
-- 🛠️ **Act** by executing the selected tool
-- 👀 **Observe** the tool's output
-- 🔁 **Repeat** until the task is complete
+The Reason + Act loop enables the agent to:
+- Reason about which tool to call
+- Act by executing the selected tool
+- Observe the tool's output
+- Repeat until the task is complete
 
 ```python
 # Handle multiple tools in a single prompt:
@@ -233,7 +214,7 @@ graph = graph_builder.compile(checkpointer=memory)
 # Each thread maintains its own conversation history
 config = {"configurable": {"thread_id": "1"}}
 graph.invoke({"messages": "My name is Bharadwaj"}, config)
-graph.invoke({"messages": "What is my name?"}, config)  # ✅ Remembers!
+graph.invoke({"messages": "What is my name?"}, config)  # Remembers across turns
 ```
 
 ### 6. Streaming Responses
@@ -251,48 +232,42 @@ async for event in graph.astream_events(input, config, version="v2"):
 
 ---
 
-## 🗺️ Roadmap
+## Roadmap
 
-- [ ] **Human-in-the-Loop** — Add interrupt nodes for user approval workflows
-- [ ] **Multi-Agent Systems** — Supervisor + worker agent architectures
-- [ ] **Custom State Channels** — Advanced state management patterns
-- [ ] **LangGraph Cloud Deployment** — Production deployment walkthrough
-- [ ] **RAG Agent** — Retrieval-augmented generation with vector stores
-- [ ] **Evaluation & Testing** — Automated agent evaluation with LangSmith
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Whether it's fixing a typo, adding a new notebook, or improving explanations:
-
-1. **Fork** the repository
-2. **Create** a feature branch (`git checkout -b feature/new-tutorial`)
-3. **Commit** your changes (`git commit -m 'feat: add human-in-the-loop tutorial'`)
-4. **Push** to the branch (`git push origin feature/new-tutorial`)
-5. **Open** a Pull Request
+- [ ] Human-in-the-Loop — add interrupt nodes for user approval workflows
+- [ ] Multi-Agent Systems — supervisor + worker agent architectures
+- [ ] Custom State Channels — advanced state management patterns
+- [ ] LangGraph Cloud Deployment — production deployment walkthrough
+- [ ] RAG Agent — retrieval-augmented generation with vector stores
+- [ ] Evaluation & Testing — automated agent evaluation with LangSmith
 
 ---
 
-## 📄 License
+## Contributing
+
+Contributions are welcome, whether that means fixing a typo, adding a new notebook, or improving an explanation.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/new-tutorial`)
+3. Commit your changes (`git commit -m 'feat: add human-in-the-loop tutorial'`)
+4. Push to the branch (`git push origin feature/new-tutorial`)
+5. Open a Pull Request
+
+---
+
+## License
 
 This project is open source and available under the [MIT License](LICENSE).
 
 ---
 
-## 🙏 Acknowledgements
+## Acknowledgements
 
 - [LangChain](https://www.langchain.com/) — for building the LangGraph framework
-- [Groq](https://groq.com/) — for blazing-fast LLM inference
+- [Groq](https://groq.com/) — for fast LLM inference
 - [Tavily](https://tavily.com/) — for AI-optimized web search
 - [LangChain Academy](https://academy.langchain.com/) — for educational inspiration
 
 ---
 
-<div align="center">
-
-**⭐ If this repository helped you learn something new, consider giving it a star!**
-
-Built with ❤️ by [Bharadwaj](https://github.com/BharadwajNB)
-
-</div>
+Maintained by [Bharadwaj](https://github.com/BharadwajNB).
